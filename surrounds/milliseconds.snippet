@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<_locDefinition xmlns="urn:locstudio">
+		<_locDefault _loc="locNone" />
+		<_locTag _loc="locData">Title</_locTag>
+		<_locTag _loc="locData">Description</_locTag>
+		<_locTag _loc="locData">Author</_locTag>
+		<_locTag _loc="locData">ToolTip</_locTag>
+		<_locTag _loc="locData">Default</_locTag>
+	</_locDefinition>
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Milliseconds</Title>
+			<Shortcut></Shortcut>
+			<Description>Removes milliseconds from a date/time field.</Description>
+			<SnippetTypes>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>Alias</ID>
+					<ToolTip>The alias for the expression.</ToolTip>
+					<Default>SOME_TIME</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="SQL">
+			<![CDATA[CONVERT(VARCHAR, $selected$, 120) [$Alias$]]]>				
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

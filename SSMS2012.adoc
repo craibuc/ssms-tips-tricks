@@ -1,0 +1,247 @@
+= SQL Server Management Studio (SSMS) 2012 Tips & Tricks
+:description: Tips and Tricks for Sql Server Management Studio 2012
+:author: Craig Buchanan
+:email: craig.buchanan@cogniza.org
+:revnumber: 0.0.0
+:revdate: {docdate} {doctime}
+:icons: font
+:toc:
+:toclevels: 4
+:toc-placement: left
+:source-highlighter: coderay
+:data-uri:
+// enable UI macros
+:experimental:
+
+== Summary
+
+A reference to make using SSMS 2012 more productive.
+
+== Contributing
+
+- Project is hosted at https://github.com/craibuc/ssms2012
+
+== Shortcuts
+
+- Run query: kbd:[F5]
+- Hide/show Results/Messages pane: kbd:[Ctrl+R]
+- Display Messages pane: kbd:[F6]
+- Go to available-servers list: kbd:[Ctrl+U]
+- Show explain plan: kbd:[Ctrl+L]
+- https://msdn.microsoft.com/en-us/library/ms174205.aspx[SQL Server Management Studio Keyboard Shortcuts]
+
+== SQL Command Mode
+
+`SQL CMD Mode` adds simple macros to the development environment.  It is also available from the command line.  See https://msdn.microsoft.com/en-us/library/ms162773.aspx[sqlcmd Utility].
+
+Start SQL Command Mode by choosing `Query | SQL CMD Mode`.
+
+=== Reuse Parameters
+
+The scope of the `DECLARE` statement is one code block:
+
+[source,tsql]
+----
+-- ensure that DECLARE in earlier section of code matches these values
+DECLARE @STARTING_DATE DATE = '09/01/15';
+DECLARE @ENDING_DATE DATE = '09/30/15';
+
+-- perform the first query, using the specified date range, producing the first result set
+SELECT  *
+FROM    TABLE_0
+WHERE   STARTING_DATE >= @STARTING_DATE AND ENDING_DATE <= @ENDING_DATE
+GO
+
+-- ensure that DECLARE in earlier section of code matches these values
+DECLARE @STARTING_DATE DATE = '09/01/15';
+DECLARE @ENDING_DATE DATE = '09/30/15';
+
+-- perform a second query, using the same date range, producing the second result set
+SELECT  *
+FROM    TABLE_1
+WHERE   STARTING_DATE >= @STARTING_DATE AND ENDING_DATE <= @ENDING_DATE
+GO
+----
+
+In SQL Command Mode, variables can be reused:
+
+[source,tsql]
+----
+:setvar starting_date '09/01/15'
+:setvar ending_date '09/30/15'
+
+-- perform the first query, using the specified date range, producing the first result set
+SELECT  *
+FROM    TABLE_0
+WHERE   STARTING_DATE >= $(starting_date) AND ENDING_DATE <= $(ending_date)
+GO
+
+-- perform a second query, using the same date range, producing the second result set
+SELECT  *
+FROM    TABLE_1
+WHERE   STARTING_DATE >= $(starting_date) AND ENDING_DATE <= $(ending_date)
+GO
+----
+
+=== Automatic exports
+
+Automatically export a result set as a CSV file.
+
+[source,tsql]
+----
+-- disable counts; '(x row(s) affected)' message that is echoed to file
+SET NOCOUNT ON
+GO
+
+-- define a base path that can be repeatedly referenced, if necessary
+:setvar path c:\path\to\directory\
+
+-- perform a query, saving the results to a CSV file
+:Out $(path)TABLE_0.csv
+SELECT  *
+FROM    TABLE_0
+GO
+
+-- restore counts
+SET NOCOUNT OFF
+GO
+----
+
+== Gotchas
+
+=== Exporting CSV Files
+
+==== Null Values
+
+When exporting a query's results to a CSV file, SSMS 2012 substitutes the word 'NULL' for `NULL` values.
+
+[source,sql]
+----
+SELECT  'LOREM IPSUM' TEXT_FIELD_0
+        ,NULL NULL_FIELD
+        ,'LOREM IPSUM' TEXT_FIELD_1
+----
+
+Desired:
+
+[source,csv]
+----
+TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
+LOREM IPSUM,,LOREM IPSUM
+----
+
+Actual:
+
+[source,csv]
+----
+TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
+LOREM IPSUM,NULL,LOREM IPSUM
+----
+
+===== Solution
+
+Post-process the file to remove the word 'NULL'.
+
+==== Date/Time Values
+
+When `DATETIME` values are exported as CSV, milliseconds are included.  By default, Excel will format this data as a time value, potentially leading to confusion.
+
+[source,sql]
+----
+SELECT  GetDate() MILLISECONDS
+----
+
+[source,csv]
+----
+MILLISECONDS
+2015-09-25 10:57:53.740
+----
+
+===== Solution
+
+`CONVERT` the field to `ODBC Canonical` format.  Use the <<Milliseconds>> snippet.
+[source,sql]
+----
+SELECT  CONVERT(VARCHAR, GetDate(), 120) NO_MILLISECONDS
+----
+
+[source,csv]
+----
+NO_MILLISECONDS
+2015-09-25 10:57:53
+----
+
+==== :Out Command
+
+When using the `:out` macro in <<SQL Command Mode>> , textual values aren't automatically escaped with double quotes.  If the text contains a comma, it will be seen as a delimiter, leading to errorenous parsing.
+
+[source,sql]
+----
+SELECT  'STRING, WITH A COMMA' FIELD_WITH_A_COMMA
+----
+
+[source,csv]
+----
+FIELD_WITH_A_COMMA
+STRING, WITH A COMMA
+----
+
+===== Solution
+
+Use the `QuoteName` function to wrap the field in double quotes,
+
+[source,sql]
+----
+SELECT  QuoteName('STRING, WITH A COMMA', Char(34)) FIELD_WITH_A_COMMA
+----
+
+[source,csv]
+----
+FIELD_WITH_A_COMMA
+"STRING, WITH A COMMA"
+----
+
+== T-SQL
+
+=== Communicating State
+
+Use `RAISERROR` to add information about a query's state during execution to the Messages pane.  When the query is executing.  Press kbd:[F6] to switch to Messages pane.
+
+[source,sql]
+----
+RAISERROR( 'Processing query 0...',0,1) WITH NOWAIT
+GO
+
+-- query 0
+
+RAISERROR( 'Processing query 1...',0,1) WITH NOWAIT
+GO
+
+-- query 1
+
+----
+
+NOTE: This tends to conflict with <<SQL Command Mode>>.
+
+== Snippets
+
+Snippets are a fast way to insert large blocks of code with simple keystrokes.
+
+General requirements:
+
+ - Application-defined snippets are located in `C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\SQL\Snippets\1033` or one of its children.  Non-standard subfolders (i.e. those made by the user) are ignored.
+ - User-defined snippets may be added to `C:\Users\<user>\Documents\SQL Server Management Studio\Code Snippets\SQL\My Code Snippets`.
+ - File must use a valid XML document that complies with its schema (when in doubt, use an existing snippet as a template).
+ - File must end with `.snippet`.
+
+=== Code Snippets Manager
+
+Snippets can be managed by using the Code Snippets Manager.
+
+Open the Code Snippets Manager by choosing `Tools | Code Snippets Manager...` or by pressing kbd:[Ctrl+K], kbd:[Ctrl+X]:
+
+image::./images/code-snippet-manager.png[]
+
+include::./expansions/expansions.adoc[]
+
+include::./surrounds/surrounds.adoc[]

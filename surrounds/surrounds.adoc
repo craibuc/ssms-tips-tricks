@@ -1,0 +1,53 @@
+
+=== Surround Snippets
+
+==== Requirements
+
+ - Snippet definition is type `<SnippetType>SurroundsWith</SnippetType>`.
+
+==== Usage
+
+When editing a query:
+
+- highlight the desired text
+- invoke by pressing kbd:[Ctrl+K], kbd:[Ctrl+S]
+- use the arrow keys to selected the desired folder and snippet
+- press kbd:[Enter]
+
+==== Examples
+
+===== Milliseconds
+
+Removes milliseconds from a date/time field.
+
+[source,xml]
+----
+include::./milliseconds.snippet[]
+----
+
+===== Pivot
+
+Inserts basic Pivot structure.
+
+[source,xml]
+----
+include::./pivot.snippet[]
+----
+
+===== Stuff
+
+*Inserts block to serialize (semi-colon delimited) a field.*
+
+[source,xml]
+----
+include::./stuff.snippet[]
+----
+
+===== Varchar
+
+Converts a field to a VARCHAR.
+
+[source,xml]
+----
+include::./varchar.snippet[]
+----

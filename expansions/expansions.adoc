@@ -1,0 +1,23 @@
+=== Expansion Snippets
+
+Expansion snippets are block of code added to the cursor's location.
+
+==== Reguirements
+
+- Snippet definition is type `<SnippetType>Expansion</SnippetType>`
+
+==== Usage
+
+When editing a query:
+
+- position the cursor in the desired location
+- invoke by pressing kbd:[Ctrl+K], kbd:[Ctrl+X]
+
+image::./images/insert-expansion.png[]
+
+- use the arrow keys to selected the desired folder and snippet
+- press kbd:[Enter]
+
+==== Examples
+
+TODO
