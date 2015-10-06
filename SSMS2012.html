@@ -509,8 +509,8 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Craig Buchanan</span><br>
 <span id="email" class="email"><a href="mailto:craig.buchanan@cogniza.org">craig.buchanan@cogniza.org</a></span><br>
-<span id="revnumber">version 0.0.1,</span>
-<span id="revdate">2015-09-25 13:53:50 CDT</span>
+<span id="revnumber">version 0.0.2,</span>
+<span id="revdate">2015-10-06 08:51:55 CDT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -518,6 +518,32 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_summary">Summary</a></li>
 <li><a href="#_contributing">Contributing</a></li>
 <li><a href="#_shortcuts">Shortcuts</a></li>
+<li><a href="#_snippets">Snippets</a>
+<ul class="sectlevel2">
+<li><a href="#_code_snippets_manager">Code Snippets Manager</a></li>
+<li><a href="#_expansion_snippets">Expansion Snippets</a>
+<ul class="sectlevel3">
+<li><a href="#_reguirements">Reguirements</a></li>
+<li><a href="#_usage">Usage</a></li>
+<li><a href="#_examples">Examples</a></li>
+</ul>
+</li>
+<li><a href="#_surround_snippets">Surround Snippets</a>
+<ul class="sectlevel3">
+<li><a href="#_requirements">Requirements</a></li>
+<li><a href="#_usage_2">Usage</a></li>
+<li><a href="#_examples_2">Examples</a>
+<ul class="sectlevel4">
+<li><a href="#_milliseconds">Milliseconds</a></li>
+<li><a href="#_pivot">Pivot</a></li>
+<li><a href="#_stuff">Stuff</a></li>
+<li><a href="#_varchar">Varchar</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#_sql_command_mode">SQL Command Mode</a>
 <ul class="sectlevel2">
 <li><a href="#_reuse_parameters">Reuse Parameters</a></li>
@@ -547,32 +573,6 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
-<li><a href="#_snippets">Snippets</a>
-<ul class="sectlevel2">
-<li><a href="#_code_snippets_manager">Code Snippets Manager</a></li>
-<li><a href="#_expansion_snippets">Expansion Snippets</a>
-<ul class="sectlevel3">
-<li><a href="#_reguirements">Reguirements</a></li>
-<li><a href="#_usage">Usage</a></li>
-<li><a href="#_examples">Examples</a></li>
-</ul>
-</li>
-<li><a href="#_surround_snippets">Surround Snippets</a>
-<ul class="sectlevel3">
-<li><a href="#_requirements">Requirements</a></li>
-<li><a href="#_usage_2">Usage</a></li>
-<li><a href="#_examples_2">Examples</a>
-<ul class="sectlevel4">
-<li><a href="#_milliseconds">Milliseconds</a></li>
-<li><a href="#_pivot">Pivot</a></li>
-<li><a href="#_stuff">Stuff</a></li>
-<li><a href="#_varchar">Varchar</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
 <li><a href="#_appendix">Appendix</a>
 <ul class="sectlevel2">
 <li><a href="#_sqlcmd">SQLCMD</a>
@@ -588,6 +588,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 </ul>
 </li>
+<li><a href="#_revisions">Revisions</a></li>
 </ul>
 </div>
 </div>
@@ -640,206 +641,6 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 <div class="sect1">
-<h2 id="_sql_command_mode">SQL Command Mode</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><code>SQL CMD Mode</code> adds simple macros to the development environment.  It is also available from the command line; see <a href="#_sqlcmd">SQLCMD</a> .</p>
-</div>
-<div class="paragraph">
-<p>Start SQL Command Mode by choosing <code>Query | SQL CMD Mode</code>.</p>
-</div>
-<div class="sect2">
-<h3 id="_reuse_parameters">Reuse Parameters</h3>
-<div class="paragraph">
-<p>The scope of the <code>DECLARE</code> statement is one code block:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="tsql">-- ensure that DECLARE in earlier section of code matches these values
-DECLARE @STARTING_DATE DATE = '09/01/15';
-DECLARE @ENDING_DATE DATE = '09/30/15';
-
--- perform the first query, using the specified date range, producing the first result set
-SELECT  *
-FROM    TABLE_0
-WHERE   STARTING_DATE &gt;= @STARTING_DATE AND ENDING_DATE &lt;= @ENDING_DATE
-GO
-
--- ensure that DECLARE in earlier section of code matches these values
-DECLARE @STARTING_DATE DATE = '09/01/15';
-DECLARE @ENDING_DATE DATE = '09/30/15';
-
--- perform a second query, using the same date range, producing the second result set
-SELECT  *
-FROM    TABLE_1
-WHERE   STARTING_DATE &gt;= @STARTING_DATE AND ENDING_DATE &lt;= @ENDING_DATE
-GO</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In SQL Command Mode, variables can be reused:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="tsql">:setvar starting_date '09/01/15'
-:setvar ending_date '09/30/15'
-
--- perform the first query, using the specified date range, producing the first result set
-SELECT  *
-FROM    TABLE_0
-WHERE   STARTING_DATE &gt;= $(starting_date) AND ENDING_DATE &lt;= $(ending_date)
-GO
-
--- perform a second query, using the same date range, producing the second result set
-SELECT  *
-FROM    TABLE_1
-WHERE   STARTING_DATE &gt;= $(starting_date) AND ENDING_DATE &lt;= $(ending_date)
-GO</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_automatic_exports">Automatic exports</h3>
-<div class="paragraph">
-<p>Automatically export a result set as a CSV file.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="tsql">-- disable counts; '(x row(s) affected)' message that is echoed to file
-SET NOCOUNT ON
-GO
-
--- define a base path that can be repeatedly referenced, if necessary
-:setvar path c:\path\to\directory\
-
--- perform a query, saving the results to a CSV file
-:Out $(path)TABLE_0.csv
-SELECT  *
-FROM    TABLE_0
-GO
-
--- restore counts
-SET NOCOUNT OFF
-GO</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_gotchas">Gotchas</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_exporting_csv_files">Exporting CSV Files</h3>
-<div class="sect3">
-<h4 id="_null_values">Null Values</h4>
-<div class="paragraph">
-<p>When exporting a query&#8217;s results to a CSV file, SSMS 2012 substitutes the word 'NULL' for <code>NULL</code> values.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  <span class="string"><span class="delimiter">'</span><span class="content">LOREM IPSUM</span><span class="delimiter">'</span></span> TEXT_FIELD_0
-        ,<span class="predefined-constant">NULL</span> NULL_FIELD
-        ,<span class="string"><span class="delimiter">'</span><span class="content">LOREM IPSUM</span><span class="delimiter">'</span></span> TEXT_FIELD_1</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Desired:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
-LOREM IPSUM,,LOREM IPSUM</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Actual:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
-LOREM IPSUM,NULL,LOREM IPSUM</code></pre>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_solution">Solution</h5>
-<div class="paragraph">
-<p>Post-process the file to remove the word 'NULL'.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_date_time_values">Date/Time Values</h4>
-<div class="paragraph">
-<p>When <code>DATETIME</code> values are exported as CSV, milliseconds are included.  By default, Excel will format this data as a time value, potentially leading to confusion.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  GetDate() MILLISECONDS</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">MILLISECONDS
-2015-09-25 10:57:53.740</code></pre>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_solution_2">Solution</h5>
-<div class="paragraph">
-<p><code>CONVERT</code> the field to <code>ODBC Canonical</code> format.  Use the <a href="#_milliseconds">Milliseconds</a> snippet.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  CONVERT(<span class="predefined-type">VARCHAR</span>, GetDate(), <span class="integer">120</span>) NO_MILLISECONDS</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">NO_MILLISECONDS
-2015-09-25 10:57:53</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__out_command">:Out Command</h4>
-<div class="paragraph">
-<p>When using the <code>:out</code> macro in <a href="#_sql_command_mode">SQL Command Mode</a> , textual values aren&#8217;t automatically escaped with double quotes.  If the text contains a comma, it will be seen as a delimiter, leading to errorenous parsing.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  <span class="string"><span class="delimiter">'</span><span class="content">STRING, WITH A COMMA</span><span class="delimiter">'</span></span> FIELD_WITH_A_COMMA</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">FIELD_WITH_A_COMMA
-STRING, WITH A COMMA</code></pre>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_solution_3">Solution</h5>
-<div class="paragraph">
-<p>Use the <code>QuoteName</code> function to wrap the field in double quotes,</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  QuoteName(<span class="string"><span class="delimiter">'</span><span class="content">STRING, WITH A COMMA</span><span class="delimiter">'</span></span>, <span class="predefined-type">Char</span>(<span class="integer">34</span>)) FIELD_WITH_A_COMMA</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="csv">FIELD_WITH_A_COMMA
-&quot;STRING, WITH A COMMA&quot;</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_snippets">Snippets</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -854,7 +655,7 @@ STRING, WITH A COMMA</code></pre>
 <p>Application-defined snippets are located in <code>C:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\SQL\Snippets\1033</code> or one of its children.  Non-standard subfolders (i.e. those made by the user) are ignored.</p>
 </li>
 <li>
-<p>User-defined snippets may be added to <code>C:\Users\&lt;user&gt;\Documents\SQL Server Management Studio\Code Snippets\SQL\My Code Snippets</code>.</p>
+<p>User-defined snippets may be added to <code>C:\Users\&lt;user&gt;\Documents\SQL Server Management Studio\Code Snippets\SQL\My Code Snippets</code>.  A remote folder may be used instead by creating a symlink: <code>C:\Users\&lt;user&gt;\Documents\SQL Server Management Studio\Code Snippets\SQL&gt; mklink /d "My Code Snippets" "\\server\path\to\folder"</code>.</p>
 </li>
 <li>
 <p>File must use a valid XML document that complies with its schema (when in doubt, use an existing snippet as a template).</p>
@@ -1164,6 +965,206 @@ STRING, WITH A COMMA</code></pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_sql_command_mode">SQL Command Mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>SQL CMD Mode</code> adds simple macros to the development environment.  It is also available from the command line; see <a href="#_sqlcmd">SQLCMD</a> .</p>
+</div>
+<div class="paragraph">
+<p>Start SQL Command Mode by choosing <code>Query | SQL CMD Mode</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_reuse_parameters">Reuse Parameters</h3>
+<div class="paragraph">
+<p>The scope of the <code>DECLARE</code> statement is one code block:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="tsql">-- ensure that DECLARE in earlier section of code matches these values
+DECLARE @STARTING_DATE DATE = '09/01/15';
+DECLARE @ENDING_DATE DATE = '09/30/15';
+
+-- perform the first query, using the specified date range, producing the first result set
+SELECT  *
+FROM    TABLE_0
+WHERE   STARTING_DATE &gt;= @STARTING_DATE AND ENDING_DATE &lt;= @ENDING_DATE
+GO
+
+-- ensure that DECLARE in earlier section of code matches these values
+DECLARE @STARTING_DATE DATE = '09/01/15';
+DECLARE @ENDING_DATE DATE = '09/30/15';
+
+-- perform a second query, using the same date range, producing the second result set
+SELECT  *
+FROM    TABLE_1
+WHERE   STARTING_DATE &gt;= @STARTING_DATE AND ENDING_DATE &lt;= @ENDING_DATE
+GO</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In SQL Command Mode, variables can be reused:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="tsql">:setvar starting_date '09/01/15'
+:setvar ending_date '09/30/15'
+
+-- perform the first query, using the specified date range, producing the first result set
+SELECT  *
+FROM    TABLE_0
+WHERE   STARTING_DATE &gt;= $(starting_date) AND ENDING_DATE &lt;= $(ending_date)
+GO
+
+-- perform a second query, using the same date range, producing the second result set
+SELECT  *
+FROM    TABLE_1
+WHERE   STARTING_DATE &gt;= $(starting_date) AND ENDING_DATE &lt;= $(ending_date)
+GO</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_automatic_exports">Automatic exports</h3>
+<div class="paragraph">
+<p>Automatically export a result set as a CSV file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="tsql">-- disable counts; '(x row(s) affected)' message that is echoed to file
+SET NOCOUNT ON
+GO
+
+-- define a base path that can be repeatedly referenced, if necessary
+:setvar path c:\path\to\directory\
+
+-- perform a query, saving the results to a CSV file
+:Out $(path)TABLE_0.csv
+SELECT  *
+FROM    TABLE_0
+GO
+
+-- restore counts
+SET NOCOUNT OFF
+GO</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gotchas">Gotchas</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_exporting_csv_files">Exporting CSV Files</h3>
+<div class="sect3">
+<h4 id="_null_values">Null Values</h4>
+<div class="paragraph">
+<p>When exporting a query&#8217;s results to a CSV file, SSMS 2012 substitutes the word 'NULL' for <code>NULL</code> values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  <span class="string"><span class="delimiter">'</span><span class="content">LOREM IPSUM</span><span class="delimiter">'</span></span> TEXT_FIELD_0
+        ,<span class="predefined-constant">NULL</span> NULL_FIELD
+        ,<span class="string"><span class="delimiter">'</span><span class="content">LOREM IPSUM</span><span class="delimiter">'</span></span> TEXT_FIELD_1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Desired:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
+LOREM IPSUM,,LOREM IPSUM</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Actual:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">TEXT_FIELD_0,NULL_FIELD,TEXT_FIELD_1
+LOREM IPSUM,NULL,LOREM IPSUM</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution">Solution</h5>
+<div class="paragraph">
+<p>Post-process the file to remove the word 'NULL'.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_date_time_values">Date/Time Values</h4>
+<div class="paragraph">
+<p>When <code>DATETIME</code> values are exported as CSV, milliseconds are included.  By default, Excel will format this data as a time value, potentially leading to confusion.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  GetDate() MILLISECONDS</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">MILLISECONDS
+2015-09-25 10:57:53.740</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_2">Solution</h5>
+<div class="paragraph">
+<p><code>CONVERT</code> the field to <code>ODBC Canonical</code> format.  Use the <a href="#_milliseconds">Milliseconds</a> snippet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  CONVERT(<span class="predefined-type">VARCHAR</span>, GetDate(), <span class="integer">120</span>) NO_MILLISECONDS</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">NO_MILLISECONDS
+2015-09-25 10:57:53</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__out_command">:Out Command</h4>
+<div class="paragraph">
+<p>When using the <code>:out</code> macro in <a href="#_sql_command_mode">SQL Command Mode</a> , textual values aren&#8217;t automatically escaped with double quotes.  If the text contains a comma, it will be seen as a delimiter, leading to errorenous parsing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  <span class="string"><span class="delimiter">'</span><span class="content">STRING, WITH A COMMA</span><span class="delimiter">'</span></span> FIELD_WITH_A_COMMA</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">FIELD_WITH_A_COMMA
+STRING, WITH A COMMA</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_solution_3">Solution</h5>
+<div class="paragraph">
+<p>Use the <code>QuoteName</code> function to wrap the field in double quotes,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="sql"><span class="class">SELECT</span>  QuoteName(<span class="string"><span class="delimiter">'</span><span class="content">STRING, WITH A COMMA</span><span class="delimiter">'</span></span>, <span class="predefined-type">Char</span>(<span class="integer">34</span>)) FIELD_WITH_A_COMMA</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="csv">FIELD_WITH_A_COMMA
+&quot;STRING, WITH A COMMA&quot;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_appendix">Appendix</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1266,11 +1267,38 @@ This tends to conflict with <a href="#_sql_command_mode">SQL Command Mode</a>.
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_revisions">Revisions</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding surrounds content; Adding <code>Revisions</code> section; Refactoring documents</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Document created</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.0.1<br>
-Last updated 2015-09-25 13:53:50 CDT
+Version 0.0.2<br>
+Last updated 2015-10-06 08:51:55 CDT
 </div>
 </div>
 </body>
