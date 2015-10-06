@@ -1,0 +1,66 @@
+== Appendix
+
+Closely-related topics and technologies.
+
+=== SQLCMD
+
+Use `sqlcmd` to run queries at the command line.  See https://msdn.microsoft.com/en-us/library/ms162773.aspx[sqlcmd Utility].
+
+==== Parameters
+
+`-E`::
+Use trusted connection (default)
+
+`-S`::
+Server name
+
+`-d`::
+Database name
+
+`-v`::
+Set a variable's value
+
+  sqlcmd -v MyVar1=something -v MyVar2="some thing"
+
+`-i` ::
+File containing the query to execute
+
+`-o`::
+File to contain the results of the query
+
+`-s`::
+Column separator (default is ` `)
+
+`-W`::
+Remove trailing spaces from a column
+
+==== Example
+
+[source,powershell]
+----
+sqlcmd -E -S server -d database -i c:\users\<user>\desktop\query.sql -o c:\users\<user>\desktop\output.csv -s ',' -W
+----
+
+=== T-SQL
+
+==== Communicating State
+
+Use `RAISERROR` to add information about a query's state during execution to the Messages pane.
+
+When the query is executing, press kbd:[F6] to switch to Messages pane.
+
+[source,sql]
+----
+RAISERROR( 'Processing query 0...',0,1) WITH NOWAIT
+GO
+
+-- query 0
+
+RAISERROR( 'Processing query 1...',0,1) WITH NOWAIT
+GO
+
+-- query 1
+
+----
+
+WARNING: This tends to conflict with <<SQL Command Mode>>.
