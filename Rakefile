@@ -7,6 +7,10 @@ namespace :documentation do
     `bundle exec asciidoctor SSMS2012.adoc`
     puts " -- HTML output at SSMS2012.html"
 
+    puts "Converting to PDF... (this one takes a while)"
+    `bundle exec asciidoctor-pdf SSMS2012.adoc 2>/dev/null`
+    puts " -- PDF  output at SSMS2012.pdf"
+
   end
 end
 
